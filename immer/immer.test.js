@@ -59,6 +59,22 @@ describe('base', () => {
     })
     expect(nextState).toBe(baseState)
   })
+  it('should support reading arrays', () => {
+    const nextState = immer(baseState, s => {
+      s.anArray.slice()
+    })
+    expect(nextState.anArray).toBe(baseState.anArray)
+    expect(nextState).toBe(baseState)
+  })
+  it('should support changing arrays', () => {
+    const nextState = immer(baseState, s => {
+      s.anArray[3] = true
+    })
+    expect(nextState).not.toBe(baseState)
+    expect(nextState.anArray).not.toBe(baseState.anArray)
+    expect(nextState.anArray[3]).toEqual(true)
+    console.log(nextState)
+  })
 
   afterEach(() => {
     expect(baseState).toBe(origBaseState)

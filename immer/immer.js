@@ -17,18 +17,24 @@ function produce(baseState, thunk) {
       }
     },
   }
-  function getOrCreateProxy(object) {
-    if (!isPlainObject(object)) return object
-    if (proxies.get(object)) return proxies.get(object)
-    const proxy = new Proxy(object, objectTrap)
-    proxies.set(object, proxy)
+  function getOrCreateProxy(thing) {
+    if (!isPlainObject(thing) && !Array.isArray(thing)) return thing
+    if (proxies.get(thing)) return proxies.get(thing)
+    const proxy = new Proxy(thing, objectTrap)
+    proxies.set(thing, proxy)
     return proxy
   }
-  function getOrCreateCopy(object) {
-    if (!isPlainObject(object)) return object
-    if (copies.get(object)) return copies.get(object)
-    const copy = Object.assign({}, object)
-    copies.set(object, copy)
+  function getOrCreateCopy(thing) {
+    if (!isPlainObject(thing) && !Array.isArray(thing)) return thing
+    if (copies.get(thing)) return copies.get(thing)
+    const copy = (()=>{
+      if(Array.isArray(thing)) {
+        return thing.slice()  
+      }else {
+        return Object.assign({}, thing)
+      }
+    })()
+    copies.set(thing, copy)
     return copy
   }
   function hasObjectChange(object) {
