@@ -26,4 +26,4 @@ store.dispatch({
 })
 
 const state = store.getState()
-console.log(state)
+console.log(state) // [ 'Use Redux', 'Read the docs' ]
